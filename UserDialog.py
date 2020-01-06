@@ -16,12 +16,15 @@ class UserDialog:
 
     @classmethod
     def getUserInputIP(cls):
+        ClientWindow = Tk()
+
         def getUserIPAndPort():
+            print('getUserIPAndPort')
             cls._Ip = e1.get()
             cls._port =int(e2.get())
             ClientWindow.destroy()
 
-        ClientWindow =Tk()
+
         Label(ClientWindow,text = '请输入id及port').grid(row = 0)
         Label(ClientWindow, text='id').grid(row = 1)
         Label(ClientWindow, text='port').grid(row=2)
