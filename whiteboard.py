@@ -1,3 +1,4 @@
+import math
 from tkinter import *
 
 class Whiteboard:
@@ -16,10 +17,30 @@ class Whiteboard:
         color = msgLst[5]
         self.drawing_area.create_rectangle(startX, startY, endX, endY, fill=color, width=0)
 
-    def draw_Line(self, msgLst):#矩形
+    def draw_Line(self, msgLst):#直线
         startX, startY, endX, endY = int(msgLst[1]), int(msgLst[2]), int(msgLst[3]), int(msgLst[4])
         color = msgLst[5]
         self.drawing_area.create_line(startX, startY, endX, endY, fill=color, width=0)
+
+    def draw_Square(self, msgLst):#正方形
+        startX, startY, endX, endY = int(msgLst[1]), int(msgLst[2]), int(msgLst[3]), int(msgLst[4])
+        color = msgLst[5]
+        edge_size = ((endX - startX) + (endY - startY)) / 2
+        self.drawing_area.create_rectangle(startX, startY, startX + edge_size, startY + edge_size, fill=color, width=0)
+
+    def draw_Oval(self, msgLst):#椭圆
+        startX, startY, endX, endY = int(msgLst[1]), int(msgLst[2]), int(msgLst[3]), int(msgLst[4])
+        color = msgLst[5]
+        self.drawing_area.create_oval(startX, startY, endX, endY , fill=color, width=0)
+
+    def draw_Circle(self, msgLst):#圆
+        startX, startY, endX, endY = int(msgLst[1]), int(msgLst[2]), int(msgLst[3]), int(msgLst[4])
+        color = msgLst[5]
+        The_contre_X = (startX + endX)/2
+        The_contre_Y = (startY + endY)/2
+        The_radius =math.math.sqrt((endX - startX)**2 + (endY - startY)**2) / 2
+        self.drawing_area.create_oval(The_contre_X - The_radius, The_contre_Y -The_radius,
+                                      The_contre_X +The_radius, The_contre_Y+The_radius , fill=color, width=0)
 
     def draw_from_msg(self,msg):#接收画图类型
         msgLst = msg.split()
@@ -30,6 +51,12 @@ class Whiteboard:
             self.draw_Rectangle(msgLst)
         if draw_type == 'L':
             self.draw_Line(msgLst)
+        if draw_type == 'S':
+            self.draw_Square(msgLst)
+        if draw_type == 'O':
+            self.draw_Oval(msgLst)
+        if draw_type == 'C':
+            self.draw_Circle(msgLst)
         else:
             pass
 
