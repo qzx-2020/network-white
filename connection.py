@@ -31,20 +31,29 @@ class Connection:
         self.sock.sendall((self.nickname.encode('utf-8')))
 
     def send_message(self,msg):
-        ''''''
-
+        msg = ' '.join(map(str,msg))
+        msg = msg + 'Ø'
+        try:
+            msg = msg.encode('ISO-8859-1')
+            self.sock.send(msg)
+        except UnicodeEncodeError:
+            pass
 
 
     def receive_msg(self):
+        msg = ''
         while True:
-            time.sleep(0.1)
+            # time.sleep(0.1)
             data = self.sock.recv(1).decode('ISO-8859-1')
             if data == 'ß':
                 print('ß')
                 continue
+            elif data == 'Ø':
+                break
             else:
                 pass
-
+            msg += data
+        return msg
 if __name__ == '__main__':
     conn = Connection()
     conn.receive_msg()

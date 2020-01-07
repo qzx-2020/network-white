@@ -20,7 +20,7 @@ class Server:
 
     def pinger(self):
         while True:
-            time.sleep(0.1)
+            time.sleep(1)
             for client in Server.Clients:
                 try:
                     msg = 'ß'.encode('ISO-8859-1')
@@ -28,7 +28,7 @@ class Server:
                     client.sock.send(msg)
                 except ConnectionResetError:
                     print('ConnectionResetError')
-                    client.termainate()
+                    client.terminate()
                     Server.Clients.remove(client)
                     pass
                 except ConnectionAbortedError:
@@ -70,8 +70,22 @@ class Client:
 
     def start(self):
         while self._run:
-            time.sleep(0.1)
+            msg = ''
+            while True:
+                data = self.sock.recv(1).decode('ISO-8859-1')
+                msg += data
+                if data == 'Ø':
+                    break
+            print(msg)
+            if msg[0] == 'D':
+                self.broadcast2Clients(msg)
+            # time.sleep(0.1)
             pass
+
+    def broadcast2Clients(self,msg):
+        msg = msg.encode('ISO-8859-1')
+        for client in Server.Clients:
+            client.sock.sendall(msg)
 
 if __name__ == '__main__':
     server = Server('127.0.0.1',6000)
