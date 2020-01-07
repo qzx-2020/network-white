@@ -6,6 +6,7 @@ import time
 
 class Server:
     Clients = []
+    logs = {}
     def __init__(self,host,port):
         self.host = host
         self.port = port
@@ -36,6 +37,7 @@ class Server:
                     Server.Clients.remove(client)
                     print('ConnectionAbortedError')
                     pass
+
     def start(self):
         while True:
             client_sock,client_addr = self.notwork.accept()
@@ -52,14 +54,23 @@ class Server:
 
             client_thread = threading.Thread(target=self.wait_for_user_nickname,args=[client_sock])
             client_thread.start()
+
+
+
     def wait_for_user_nickname(self,client_sock):
         new_user_id = client_sock.recv(1024).decode('utf-8')
         print(new_user_id)
+
+        for msgid in Server.logs.keys():
+            msg = Server.logs[msgid]
+            client_sock.sendall(msg.encode('ISO-8859-1'))
+
         client = Client(client_sock,new_user_id)
         Server.Clients.append(client)
         client.start()
 
 class Client:
+    msgID = 0
     def __init__(self,sock,clentID):
         self.sock = sock
         self.clientID =clentID
@@ -77,8 +88,10 @@ class Client:
                 if data == 'Ø':
                     break
             print(msg)
-            if msg[0] == 'D':
+            Server.logs[Client.msgID] = msg
+            if msg[0] in ['D', 'R','L']:
                 self.broadcast2Clients(msg)
+            Client.msgID += 1
             # time.sleep(0.1)
             pass
 

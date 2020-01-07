@@ -1,21 +1,35 @@
 from tkinter import *
 
 class Whiteboard:
-    drawing_tool = "line"
+    drawing_tool = ""
     # Colors = {'b': 'blue', 'r': 'red', 'g': 'green', 'o': 'orange', 'y': 'yellow', 'c': 'cyan', 'p': 'purple1',
     #           'd': 'black', 's': 'snow'}
     line_width =2
 
-    def draw_line(self,msgLst):
+    def draw_Pencil(self,msgLst):#画线
         startX,startY,endX,endY = int(msgLst[1]),int(msgLst[2]),int(msgLst[3]),int(msgLst[4]),
         color = msgLst[5]
         self.drawing_area.create_line(startX,startY,endX,endY,fill=color,width =self.line_width)
 
-    def draw_from_msg(self,msg):
+    def draw_Rectangle(self, msgLst):#矩形
+        startX, startY, endX, endY = int(msgLst[1]), int(msgLst[2]), int(msgLst[3]), int(msgLst[4])
+        color = msgLst[5]
+        self.drawing_area.create_rectangle(startX, startY, endX, endY, fill=color, width=0)
+
+    def draw_Line(self, msgLst):#矩形
+        startX, startY, endX, endY = int(msgLst[1]), int(msgLst[2]), int(msgLst[3]), int(msgLst[4])
+        color = msgLst[5]
+        self.drawing_area.create_line(startX, startY, endX, endY, fill=color, width=0)
+
+    def draw_from_msg(self,msg):#接收画图类型
         msgLst = msg.split()
         draw_type =msgLst[0]
-        if draw_type =='D':
-            self.draw_line(msgLst)
+        if draw_type == 'D':
+            self.draw_Pencil(msgLst)
+        if draw_type == 'R':
+            self.draw_Rectangle(msgLst)
+        if draw_type == 'L':
+            self.draw_Line(msgLst)
         else:
             pass
 
