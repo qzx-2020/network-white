@@ -76,12 +76,13 @@ class Client(Thread,Whiteboard):
             self.draw_one_obj()
 
     def do_drag(self):
-        msg = ('DR', self.last_click_obj, self.line_x2 - self.line_x1, self.line_y2 - self.line_y1)
-        self.conn.send_message(msg)
+        if self.last_click_obj !=None:
+            msg = ('DR', self.last_click_obj, self.line_x2 - self.line_x1, self.line_y2 - self.line_y1)
+            self.conn.send_message(msg)
 
     def draw_text(self):
         text_to_draw = UserDialog._Text
-        msg = ('T',self.line_x1, self.line_y1, 'red', text_to_draw)
+        msg = ('T',self.line_x1, self.line_y1, self.color, text_to_draw)
         self.conn.send_message(msg)
 
     def draw_one_obj(self):
@@ -91,7 +92,7 @@ class Client(Thread,Whiteboard):
 
         else:
             cmd_type = Client.Objects[tool]
-            msg = (cmd_type, self.line_x1, self.line_y1, self.line_x2, self.line_y2, 'red')
+            msg = (cmd_type, self.line_x1, self.line_y1, self.line_x2, self.line_y2, self.color)
             self.conn.send_message(msg)
 
     def motion(self, event=None):
@@ -101,7 +102,7 @@ class Client(Thread,Whiteboard):
                 print('too fast')
                 return
             self.last_time = now
-            msg = ('D', self.x_pos, self.y_pos, event.x, event.y, 'red')
+            msg = ('D', self.x_pos, self.y_pos, event.x, event.y, self.color)
             self.conn.send_message(msg)
             self.x_pos=event.x
             self.y_pos=event.y

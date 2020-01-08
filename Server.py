@@ -70,7 +70,7 @@ class Server:
         client.start()
 
 class Client:
-    msgID = 1
+    msgID = 0
     def __init__(self,sock,clentID):
         self.sock = sock
         self.clientID =clentID
@@ -108,16 +108,16 @@ class Client:
             client.sock.sendall(msg)
 
     def delete_shape(self,msg,splitmsg):
-        if int(splitmsg[1]) in Server.logs:
-            Server.logs.pop(int(splitmsg[1]))
+        if splitmsg[1] in Server.logs:
+            Server.logs.pop(splitmsg[1])
             msg = msg.encode('ISO-8859-1')
             for client in Server.Clients:
                 client.sock.sendall(msg)
 
     # 'C 11 22 33 44 red Ø'-> 'C 11 22 33 44 red m105 Ø'
     def broadcast2Clients(self,msg):
-        msg = msg[:-1] + str(Client.msgID) + ' Ø'  # 假设Client.msgID = 105
-        Server.logs[Client.msgID] = msg
+        msg = msg[:-1] + 'm' +str(Client.msgID) + ' Ø'  # 假设Client.msgID = 105
+        Server.logs['m' + str(Client.msgID)] = msg
         msg = msg.encode('ISO-8859-1')
         for client in Server.Clients:
             client.sock.sendall(msg)

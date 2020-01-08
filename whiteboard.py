@@ -6,8 +6,8 @@ from UserDialog import UserDialog
 
 class Whiteboard:
     drawing_tool = "line"
-    # Colors = {'b': 'blue', 'r': 'red', 'g': 'green', 'o': 'orange', 'y': 'yellow', 'c': 'cyan', 'p': 'purple1',
-    #           'd': 'black', 's': 'snow'}
+    Colors = {'b': 'blue', 'r': 'red', 'g': 'green', 'o': 'orange', 'y': 'yellow', 'c': 'cyan', 'p': 'purple1',
+              'd': 'black', 's': 'snow'}
     line_width =2
 
     def draw_Pencil(self,msgLst):#画线
@@ -93,7 +93,7 @@ class Whiteboard:
         self._init_item_button()
         self._init_color_button()
         self.init_drawing_area()
-        self.color = 'b'
+        self.color = 'black'
 
     def drag_obj(self,msgLst):
         item = self.drawing_area.find_withtag(msgLst[1])
@@ -130,7 +130,7 @@ class Whiteboard:
 
     def set_color(self, color):
         print(color)
-        self.color = color
+        self.color = self.Colors[color]
 
     def get_text_from_user(self):
         Whiteboard.drawing_tool = 'text'
