@@ -7,7 +7,6 @@ class Connection:
         UserDialog.getUserInputIP()
         self.host = UserDialog._Ip
         self.port = UserDialog._port
-
         print(self.host,self.port)
 
         self.sock = socket.socket()
@@ -32,7 +31,7 @@ class Connection:
 
     def send_message(self,msg):
         msg = ' '.join(map(str,msg))
-        msg = msg + 'Ø'
+        msg = msg + ' Ø'
         try:
             msg = msg.encode('ISO-8859-1')
             self.sock.send(msg)

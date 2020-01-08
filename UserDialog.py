@@ -5,25 +5,48 @@ class UserDialog:
     _Ip = ''
     _port = 0
     _nickname = ''
+    _Text = 'hello'
     def __init__(self):
         pass
+
     @classmethod
-    def show_error_box(cls,msg):
+    def get_text_from_user(cls):
+        def get_text():
+            temp = e1.get()
+            master.destroy()
+            if ("Ø" in temp):
+                cls.show_error_box("Invalid character in expression")
+            else:
+                cls._Text = temp
+
         master = Tk()
-        Label(master,text = msg).grid(row =0)
-        Button(master,text ='ok',command =master.destroy()).grid(row =1,pady =4)
+        Label(master, text="What do you want to write?").grid(row=0)
+        e1 = Entry(master)
+        Label(master, text="Text: ").grid(row=1)
+        e1.grid(row=1, column=1)
+
+        button = Button(master)
+        button.config(text='Set', command=get_text)
+        button.grid(row=2, column=0, sticky=W, pady=4)
+        master.bind('<Return>', lambda event=None: button.invoke())
+        master.mainloop()
+
+    @classmethod
+    def show_error_box(cls, msg):
+        master = Tk()
+        Label(master, text=msg).grid(row=0)
+        Button(master, text='OK', command=master.destroy).grid(row=1, pady=4)
         master.mainloop()
 
     @classmethod
     def getUserInputIP(cls):
-        ClientWindow = Tk()
-
         def getUserIPAndPort():
             print('getUserIPAndPort')
             cls._Ip = e1.get()
             cls._port =int(e2.get())
             ClientWindow.destroy()
 
+        ClientWindow = Tk()
 
         Label(ClientWindow,text = '请输入id及port').grid(row = 0)
         Label(ClientWindow, text='id').grid(row = 1)
@@ -49,15 +72,15 @@ class UserDialog:
 
             ClentWindow.destroy()
         ClentWindow = Tk()
-        Label(ClentWindow,text ='请输入昵称').grid(row =0)
+        Label(ClentWindow, text ='请输入昵称').grid(row =0)
         Label(ClentWindow, text='昵称').grid(row=1)
 
         e1 = Entry(ClentWindow)
         e1.grid(row =1,column =1)
 
         buttom = Button(ClentWindow)
-        buttom.grid(row =2,column =1)
-        buttom.config(text ='ok',command =getUserNickNameInner)
+        buttom.grid(row=2, column=1)
+        buttom.config(text='ok', command=getUserNickNameInner)
 
         ClentWindow.mainloop()
 
