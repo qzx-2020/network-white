@@ -79,6 +79,10 @@ class Whiteboard:
             self.draw_Text(msgLst)
         elif draw_type == 'Z':
             self.delete_obj(msgLst)
+        elif draw_type == 'DA':#待完成！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+            self.delete_all(msgLst)
+        elif draw_type == 'DR':
+            self.drag_obj(msgLst)
         else:
             pass
 
@@ -91,10 +95,21 @@ class Whiteboard:
         self.init_drawing_area()
         self.color = 'b'
 
+    def drag_obj(self,msgLst):
+        item = self.drawing_area.find_withtag(msgLst[1])
+        self.drawing_area.move(item,int(msgLst[2]),int(msgLst[3]))
+
     def delete_obj(self, msgLst):
         # self.drawing_area.delete(msgLst[1])
         item = self.drawing_area.find_withtag(msgLst[1])
         self.drawing_area.delete(item)
+
+    def delete_all(self):#待完成！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+        A = self.drawing_area.find_all()
+        for a in A:
+            a = self.drawing_area.gettags(a)
+            msg = ("E", a[1])
+            self.my_connexion.send_message(msg)
 
 
     def show_window(self):
@@ -140,6 +155,8 @@ class Whiteboard:
                command=lambda: self.set_drawing_tool('eraser')).place(x=560, y=0)
         Button(self.myWhiteBoard, text='drag', height=1, width=5, bg='green', font='Arial',
                command=lambda: self.set_drawing_tool('drag')).place(x=630, y=0)
+        Button(self.myWhiteBoard, text='clear', height=1, width=5, bg='white', font='Arial',
+               command=self.delete_all).place(x=700, y=0)
 
     def _init_color_button(self):
         Button(self.myWhiteBoard, height=1, width=5, bg='red',

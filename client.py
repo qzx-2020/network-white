@@ -7,7 +7,7 @@ from whiteboard import Whiteboard
 
 class Client(Thread,Whiteboard):
     Objects = {'line': 'L', 'oval': 'O', 'circle': 'C', 'rectangle': 'R',
-               'square': 'S', 'drag': 'DR'}
+               'square': 'S', 'drag': 'DR', 'clear':'DA'}
 
     def __init__(self):
         self.conn = Connection()
@@ -19,6 +19,7 @@ class Client(Thread,Whiteboard):
         self.x_pos=None
         self.y_pos=None
         self.last_time = None
+        self.last_click_obj = None
 
         self.line_x1,self.line_y1,self.line_x2,self.line_y2 = None,None,None,None
 
@@ -40,6 +41,11 @@ class Client(Thread,Whiteboard):
             msg = ('Z',msgid)
             self.conn.send_message(msg)
 
+    # def send_delall_msg(self):
+    #     tags = self.drawing_area.gettags()
+    #     msgid = tags[0]
+    #     msg = ('Z', msgid)
+    #     self.conn.send_message(msg)
 
     def left_but_down(self,event=None):
         self.isMouseDown = True
@@ -51,6 +57,11 @@ class Client(Thread,Whiteboard):
 
         if self.isMouseDown == True and self.drawing_tool == 'eraser':
             self.send_del_msg(event)
+        try:
+            self.last_click_obj =self.drawing_area.gettags('current')[0]
+            print(self.last_click_obj)
+        except Exception:
+            pass
 
     def left_but_up(self,event=None):
         self.isMouseDown = False
@@ -59,8 +70,14 @@ class Client(Thread,Whiteboard):
         self.line_x2, self.line_y2 = event.x, event.y
         if self.drawing_tool =='text':
             self.draw_text()
+        elif self.drawing_tool == 'drag':
+            self.do_drag()
         else:
             self.draw_one_obj()
+
+    def do_drag(self):
+        msg = ('DR', self.last_click_obj, self.line_x2 - self.line_x1, self.line_y2 - self.line_y1)
+        self.conn.send_message(msg)
 
     def draw_text(self):
         text_to_draw = UserDialog._Text
@@ -71,6 +88,7 @@ class Client(Thread,Whiteboard):
         tool = self.drawing_tool
         if tool not in Client.Objects.keys():
             return
+
         else:
             cmd_type = Client.Objects[tool]
             msg = (cmd_type, self.line_x1, self.line_y1, self.line_x2, self.line_y2, 'red')

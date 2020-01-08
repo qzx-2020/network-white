@@ -89,14 +89,23 @@ class Client:
                     break
             print(msg)
             # Server.logs[Client.msgID] = msg
-            if msg[0] in ['D', 'R', 'L', 'S', 'O', 'C', 'T']:
+            if msg[0] in ['D', 'R', 'L', 'S', 'O', 'C', 'T', 'DR']:
                 self.broadcast2Clients(msg)
             elif msg[0] in ['Z']:
                 splitmsg = msg.split()
                 self.delete_shape(msg, splitmsg)
+
+            elif msg[0] in ['DA']:
+                self.delete_all(msg)
             # Client.msgID += 1
             # time.sleep(0.1)
             pass
+
+    def delete_all(self,msg):#待完成！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+        Server.logs.clear()
+        msg = msg.encode('ISO-8859-1')
+        for client in Server.Clients:
+            client.sock.sendall(msg)
 
     def delete_shape(self,msg,splitmsg):
         if int(splitmsg[1]) in Server.logs:
